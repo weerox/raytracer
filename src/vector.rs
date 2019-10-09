@@ -39,6 +39,14 @@ impl Vector3 {
 	pub fn dot(&self, v: Vector3) -> f32 {
 		return self.x * v.x + self.y * v.y + self.z * v.z;
 	}
+
+	pub fn cross(&self, v: Vector3) -> Vector3 {
+		Vector3::new(
+			self.y * v.z - self.z * v.y,
+			self.z * v.x - self.x * v.z,
+			self.x * v.y - self.y * v.x
+		)
+	}
 }
 
 #[derive(Clone)]
