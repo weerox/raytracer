@@ -20,17 +20,3 @@ impl Point3 {
 		Vector3::new(self.x, self.y, self.z)
 	}
 }
-
-pub struct Point2 {
-	x: f32,
-	y: f32,
-}
-
-impl Point2 {
-	pub fn new(x: f32, y: f32) -> Point2 {
-		Point2 {
-			x: x,
-			y: y,
-		}
-	}
-}
