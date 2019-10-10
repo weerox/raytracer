@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Copy, Clone)]
 pub struct Vector3 {
 	x: f32,
 	y: f32,
