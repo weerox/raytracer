@@ -1,3 +1,5 @@
+use crate::point::Point3;
+
 #[derive(Copy, Clone)]
 pub struct Vector3 {
 	x: f32,
@@ -12,6 +14,10 @@ impl Vector3 {
 			y: y,
 			z: z,
 		}
+	}
+
+	pub fn as_point(&self) -> Point3 {
+		Point3::new(self.x, self.y, self.z)
 	}
 
 	pub fn length(&self) -> f32 {
