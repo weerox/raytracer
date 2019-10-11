@@ -13,4 +13,8 @@ impl Scene {
 			objects: Vec::new(),
 		}
 	}
+
+	pub fn add_object(&mut self, object: Object) {
+		self.objects.push(object);
+	}
 }
