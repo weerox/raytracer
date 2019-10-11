@@ -8,6 +8,15 @@ pub enum Object {
 	Plane(Plane),
 }
 
+impl Object {
+	pub fn color(&self) -> Rgb {
+		match self {
+			Object::Sphere(object) => object.color(),
+			Object::Plane(object) => object.color(),
+		}
+	}
+}
+
 #[derive(Copy, Clone)]
 pub struct Sphere {
 	center: Point3,
@@ -22,6 +31,10 @@ impl Sphere {
 			radius: radius,
 			color: color,
 		}
+	}
+
+	pub fn color(&self) -> Rgb {
+		self.color
 	}
 }
 
@@ -45,5 +58,9 @@ impl Plane {
 			normal: normal,
 			color: color,
 		}
+	}
+
+	pub fn color(&self) -> Rgb {
+		self.color
 	}
 }
