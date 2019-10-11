@@ -4,6 +4,7 @@ mod ray;
 mod color;
 mod object;
 mod camera;
+mod scene;
 
 fn main() {
 
