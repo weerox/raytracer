@@ -30,16 +30,20 @@ impl Vector3 {
 		self.z *= r;
 	}
 
-	pub fn add(&mut self, v: Vector3) {
+	pub fn add(&mut self, v: Vector3) -> &mut Vector3 {
 		self.x += v.x;
 		self.y += v.y;
 		self.z += v.z;
+
+		return self;
 	}
 
-	pub fn subtract(&mut self, v: Vector3) {
+	pub fn subtract(&mut self, v: Vector3) -> &mut Vector3 {
 		self.x -= v.x;
 		self.y -= v.y;
 		self.z -= v.z;
+
+		return self;
 	}
 
 	pub fn dot(&self, v: Vector3) -> f32 {
