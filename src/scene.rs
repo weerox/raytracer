@@ -1,6 +1,7 @@
 use crate::camera::Camera;
 use crate::object::Object;
 use crate::ray::Ray;
+use crate::color::RGB_BLACK;
 use crate::color::Rgb;
 
 use image::{ImageBuffer, RgbImage};
@@ -85,9 +86,10 @@ impl Scene {
 
 						if min_object.is_some() {
 							let min_object = min_object.unwrap();
+
 							color = min_object.color();
 						} else {
-							color = Rgb::new(0, 0, 0);
+							color = RGB_BLACK;
 						}
 
 						r += color.r as u16;
