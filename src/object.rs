@@ -23,6 +23,13 @@ impl Object {
 			Object::Plane(object) => object.color(),
 		}
 	}
+
+	pub fn normal(&self, point: Point3) -> Vector3 {
+		match self {
+			Object::Sphere(object) => object.normal(point),
+			Object::Plane(object) => object.normal(point),
+		}
+	}
 }
 
 #[derive(Copy, Clone)]
@@ -89,6 +96,18 @@ impl Sphere {
 
 		return None;
 	}
+
+	pub fn normal(&self, point: Point3) -> Vector3 {
+		let mut p = point.as_vector();
+		let c = self.center.as_vector();
+		let mut normal = p.subtract(c).clone();
+
+		if normal.length() != 1.0 {
+			normal.scale(1.0 / normal.length());
+		}
+
+		return normal;
+	}
 }
 
 #[derive(Copy, Clone)]
@@ -145,5 +164,15 @@ impl Plane {
 				return None;
 			}
 		}
+	}
+
+	pub fn normal(&self, point: Point3) -> Vector3 {
+		let mut normal = self.normal.clone();
+
+		if normal.length() != 1.0 {
+			normal.scale(1.0 / normal.length());
+		}
+
+		return normal;
 	}
 }
