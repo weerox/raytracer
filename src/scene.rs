@@ -41,40 +41,66 @@ impl Scene {
 
 		for x in 0..width {
 			for y in 0..height {
-				let mut ray_direction = self.camera.direction.clone();
+				let mut r: u16 = 0;
+				let mut b: u16 = 0;
+				let mut g: u16 = 0;
 
-				let mut left = left_start.clone();
-				left.scale((left_len - (x as f32 + 0.5) * delta_x) / left.length());
+				for i in 0..3 {
+					for j in 0..3 {
+						let mut ray_direction = self.camera.direction.clone();
 
-				let mut up = up_start.clone();
-				up.scale((up_len - (y as f32 + 0.5) * delta_y) / up.length());
+						let substep_x = (i + 1) as f32 / (2 + 1) as f32;
+						let substep_y = (j + 1) as f32 / (2 + 1) as f32;
 
-				ray_direction.add(left);
-				ray_direction.add(up);
+						let mut left = left_start.clone();
+						left.scale(
+							(left_len - (x as f32 + substep_x) * delta_x) / left.length()
+						);
 
-				let ray = Ray::new(self.camera.position, ray_direction);
-				let mut min_d = std::f32::MAX;
-				let mut min_object = None;
-				for i in 0..self.objects.len() {
-					let object = self.objects[i];
-					let d = object.intersects(ray);
+						let mut up = up_start.clone();
+						up.scale(
+							(up_len - (y as f32 + substep_y) * delta_y) / up.length()
+						);
 
-					if d != None {
-						let d = d.unwrap();
-						if d < min_d {
-							min_d = d;
-							min_object = Some(object);
+						ray_direction.add(left);
+						ray_direction.add(up);
+
+						let ray = Ray::new(self.camera.position, ray_direction);
+						let mut min_d = std::f32::MAX;
+						let mut min_object = None;
+						for i in 0..self.objects.len() {
+							let object = self.objects[i];
+							let d = object.intersects(ray);
+
+							if d != None {
+								let d = d.unwrap();
+								if d < min_d {
+									min_d = d;
+									min_object = Some(object);
+								}
+							}
 						}
+
+						let color;
+
+						if min_object.is_some() {
+							let min_object = min_object.unwrap();
+							color = min_object.color();
+						} else {
+							color = Rgb::new(0, 0, 0);
+						}
+
+						r += color.r as u16;
+						g += color.g as u16;
+						b += color.b as u16;
 					}
 				}
 
-				if min_object.is_some() {
-					let min_object = min_object.unwrap();
+				r /= 9;
+				g /= 9;
+				b /= 9;
 
-					image.put_pixel(x, y, min_object.color().to_pixel());
-				} else {
-					image.put_pixel(x, y, Rgb::new(0, 0, 0).to_pixel());
-				}
+				image.put_pixel(x, y, Rgb::new(r as u8, g as u8, b as u8).to_pixel());
 			}
 		}
 
