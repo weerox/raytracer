@@ -50,8 +50,8 @@ impl Scene {
 					for j in 0..3 {
 						let mut ray_direction = self.camera.direction.clone();
 
-						let substep_x = (i + 1) as f32 / (2 + 1) as f32;
-						let substep_y = (j + 1) as f32 / (2 + 1) as f32;
+						let substep_x = (i + 1) as f32 / (3 + 1) as f32;
+						let substep_y = (j + 1) as f32 / (3 + 1) as f32;
 
 						let mut left = left_start.clone();
 						left.scale(
