@@ -59,14 +59,14 @@ impl Sphere {
 			ray.direction.scale(1.0 / ray.direction.length());
 		}
 
-		let mut origin_to_center = ray.origin.as_vector();
-		origin_to_center.subtract(self.center.as_vector());
+		let mut center_to_origin = ray.origin.as_vector();
+		center_to_origin.subtract(self.center.as_vector());
 
 		// formula from en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
 
 		let a = ray.direction.dot(ray.direction);
-		let b = 2.0 * ray.direction.dot(origin_to_center);
-		let c = origin_to_center.dot(origin_to_center) - self.radius * self.radius;
+		let b = 2.0 * ray.direction.dot(center_to_origin);
+		let c = center_to_origin.dot(center_to_origin) - self.radius * self.radius;
 
 		// solve for the distance using pq-formula
 		// the discriminant describes the number of intersections
@@ -81,9 +81,8 @@ impl Sphere {
 				return Some(d);
 			}
 		} else if discriminant > 0.0 {
-			let d = -b / (2.0 * a);
-			let d1 = d + discriminant.sqrt();
-			let d2 = d - discriminant.sqrt();
+			let d1 = (-b + discriminant.sqrt()) / (2.0 * a);
+			let d2 = (-b - discriminant.sqrt()) / (2.0 * a);
 
 			if d1 > 0.0 && d2 > 0.0 {
 				return Some(d1.min(d2));
