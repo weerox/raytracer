@@ -21,10 +21,12 @@ impl Object {
 	}
 
 	pub fn color(&self, scene: &Scene, point: Point3) -> Rgb {
-		let color = match self {
+		let mut color = match self {
 			Object::Sphere(object) => object.color,
 			Object::Plane(object) => object.color,
 		};
+
+		let mut lambert_sum = 0.0;
 
 		for i in 0..scene.lights.len() {
 			let light = scene.lights[i];
@@ -57,7 +59,16 @@ impl Object {
 
 			if intersects {
 				return RGB_BLACK;
+			}	else {
+				let lambert = direction.dot(self.normal(point));
+				lambert_sum += lambert;
 			}
+		}
+
+		if lambert_sum > 0.0 {
+			color.r = (color.r as f32 * lambert_sum.min(1.0)) as u8;
+			color.g = (color.g as f32 * lambert_sum.min(1.0)) as u8;
+			color.b = (color.b as f32 * lambert_sum.min(1.0)) as u8;
 		}
 
 		return color;
