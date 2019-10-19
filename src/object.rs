@@ -65,11 +65,9 @@ impl Object {
 			}
 		}
 
-		if lambert_sum > 0.0 {
-			color.r = (color.r as f32 * lambert_sum.min(1.0)) as u8;
-			color.g = (color.g as f32 * lambert_sum.min(1.0)) as u8;
-			color.b = (color.b as f32 * lambert_sum.min(1.0)) as u8;
-		}
+		color.r = (color.r as f32 * lambert_sum.min(1.0)) as u8;
+		color.g = (color.g as f32 * lambert_sum.min(1.0)) as u8;
+		color.b = (color.b as f32 * lambert_sum.min(1.0)) as u8;
 
 		return color;
 	}
@@ -134,9 +132,9 @@ impl Sphere {
 			let d1 = (-b + discriminant.sqrt()) / (2.0 * a);
 			let d2 = (-b - discriminant.sqrt()) / (2.0 * a);
 
-			if d1 > 0.0001 && d2 > 0.0001 {
+			if d1 > 0.0 && d2 > 0.0 {
 				return Some(d1.min(d2));
-			} else if d1 <= 0.0001 && d2 <= 0.0001 {
+			} else if d1 <= 0.0 && d2 <= 0.0 {
 				return None;
 			} else {
 				return Some(d1.max(d2));
@@ -207,7 +205,7 @@ impl Plane {
 			// the line intersects the plane at a single point
 			let d = numerator / denominator;
 
-			if d > 0.0001 {
+			if d > 0.0 {
 				return Some(d);
 			} else {
 				return None;

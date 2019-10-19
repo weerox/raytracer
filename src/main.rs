@@ -16,7 +16,6 @@ use object::Sphere;
 use object::Plane;
 use light::Light;
 use light::DirectionalLight;
-use color::Rgb;
 
 fn main() {
 	let camera = Camera::new(
@@ -39,7 +38,7 @@ fn main() {
 
 	let plane = Plane::new(
 		Point3::new(0.0, 0.0, -1.0),
-		Vector3::new(0.0, 0.0, -1.0),
+		Vector3::new(0.0, 0.0, 1.0),
 		color::RGB_PASTEL_GREEN
 	);
 

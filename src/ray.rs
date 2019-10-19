@@ -40,6 +40,14 @@ impl Ray {
 			let mut point = self.direction.clone();
 			point.scale(min_d / point.length());
 
+			// move the point a tiny distance along the normal
+			// to make sure that it doesn't end up inside/behind objects
+			// due to floating point errors
+			let mut normal = min_object.normal(point.as_point());
+			normal.scale(0.000001 / normal.length());
+
+			point.add(normal);
+
 			return min_object.color(scene, point.as_point());
 		} else {
 			return RGB_BLACK;
