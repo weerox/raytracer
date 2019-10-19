@@ -1,26 +1,32 @@
 use crate::camera::Camera;
+use crate::light::Light;
 use crate::object::Object;
 use crate::ray::Ray;
-use crate::color::RGB_BLACK;
 use crate::color::Rgb;
 
 use image::{ImageBuffer, RgbImage};
 
 pub struct Scene {
 	camera: Camera,
-	objects: Vec<Object>,
+	pub lights: Vec<Light>,
+	pub objects: Vec<Object>,
 }
 
 impl Scene {
 	pub fn new(camera: Camera) -> Scene {
 		Scene {
 			camera: camera,
+			lights: Vec::new(),
 			objects: Vec::new(),
 		}
 	}
 
 	pub fn add_object(&mut self, object: Object) {
 		self.objects.push(object);
+	}
+
+	pub fn add_light(&mut self, light: Light) {
+		self.lights.push(light);
 	}
 
 	pub fn render(&self) -> RgbImage {
@@ -67,30 +73,8 @@ impl Scene {
 						ray_direction.add(up);
 
 						let ray = Ray::new(self.camera.position, ray_direction);
-						let mut min_d = std::f32::MAX;
-						let mut min_object = None;
-						for i in 0..self.objects.len() {
-							let object = self.objects[i];
-							let d = object.intersects(ray);
 
-							if d != None {
-								let d = d.unwrap();
-								if d < min_d {
-									min_d = d;
-									min_object = Some(object);
-								}
-							}
-						}
-
-						let color;
-
-						if min_object.is_some() {
-							let min_object = min_object.unwrap();
-
-							color = min_object.color();
-						} else {
-							color = RGB_BLACK;
-						}
+						let color = ray.trace(self);
 
 						r += color.r as u16;
 						g += color.g as u16;

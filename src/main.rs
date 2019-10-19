@@ -3,6 +3,7 @@ mod vector;
 mod ray;
 mod color;
 mod object;
+mod light;
 mod camera;
 mod scene;
 
@@ -13,6 +14,8 @@ use scene::Scene;
 use object::Object;
 use object::Sphere;
 use object::Plane;
+use light::Light;
+use light::DirectionalLight;
 use color::Rgb;
 
 fn main() {
@@ -40,11 +43,15 @@ fn main() {
 		color::RGB_PASTEL_GREEN
 	);
 
+	let light = DirectionalLight::new(Vector3::new(0.0, -1.0, -1.0));
+
 	let mut scene = Scene::new(camera);
 
 	scene.add_object(Object::Sphere(sphere));
 	scene.add_object(Object::Sphere(sphere2));
 	scene.add_object(Object::Plane(plane));
+
+	scene.add_light(Light::Directional(light));
 
 	let image = scene.render();
 	image.save("render.png").unwrap();

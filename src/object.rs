@@ -2,6 +2,9 @@ use crate::point::Point3;
 use crate::vector::Vector3;
 use crate::ray::Ray;
 use crate::color::Rgb;
+use crate::color::RGB_BLACK;
+use crate::scene::Scene;
+use crate::light::Light;
 
 #[derive(Copy, Clone)]
 pub enum Object {
@@ -10,18 +13,54 @@ pub enum Object {
 }
 
 impl Object {
-	pub fn intersects(&self, ray: Ray) -> Option<f32> {
+	pub fn intersects(&self, ray: &Ray) -> Option<f32> {
 		match self {
 			Object::Sphere(object) => object.intersects(ray),
 			Object::Plane(object) => object.intersects(ray),
 		}
 	}
 
-	pub fn color(&self) -> Rgb {
-		match self {
-			Object::Sphere(object) => object.color(),
-			Object::Plane(object) => object.color(),
+	pub fn color(&self, scene: &Scene, point: Point3) -> Rgb {
+		let color = match self {
+			Object::Sphere(object) => object.color,
+			Object::Plane(object) => object.color,
+		};
+
+		for i in 0..scene.lights.len() {
+			let light = scene.lights[i];
+			let mut direction = match light {
+				Light::Directional(light) => {
+					let mut d = light.direction;
+					d.scale(-1.0);
+					d
+				},
+				Light::Point(light) => {
+					light.point.as_vector().subtract(point.as_vector()).clone()
+				},
+			};
+
+			if direction.length() != 1.0 {
+				direction.scale(1.0 / direction.length());
+			}
+
+			let ray = Ray::new(point, direction);
+			let mut intersects = false;
+
+			for j in 0..scene.objects.len() {
+				let object = scene.objects[j];
+
+				if object.intersects(&ray).is_some() {
+					intersects = true;
+					break;
+				}
+			}
+
+			if intersects {
+				return RGB_BLACK;
+			}
 		}
+
+		return color;
 	}
 
 	pub fn normal(&self, point: Point3) -> Vector3 {
@@ -52,8 +91,8 @@ impl Sphere {
 		self.color
 	}
 
-	pub fn intersects(&self, ray: Ray) -> Option<f32> {
-		let mut ray = ray;
+	pub fn intersects(&self, ray: &Ray) -> Option<f32> {
+		let mut ray = ray.clone();
 		// make sure that the ray is a unit vector
 		if ray.direction.length() != 1.0 {
 			ray.direction.scale(1.0 / ray.direction.length());
@@ -135,8 +174,8 @@ impl Plane {
 		self.color
 	}
 
-	pub fn intersects(&self, ray: Ray) -> Option<f32> {
-		let mut ray = ray;
+	pub fn intersects(&self, ray: &Ray) -> Option<f32> {
+		let mut ray = ray.clone();
 		// make sure that the ray is a unit vector
 		if ray.direction.length() != 1.0 {
 			ray.direction.scale(1.0 / ray.direction.length());
