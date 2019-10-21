@@ -21,8 +21,7 @@ impl Ray {
 	pub fn trace(&self, scene: &Scene) -> Rgb {
 		let mut min_d = std::f32::MAX;
 		let mut min_object = None;
-		for i in 0..scene.objects.len() {
-			let object = scene.objects[i];
+		for object in &scene.objects {
 			let d = object.intersects(self);
 
 			if d != None {

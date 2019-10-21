@@ -28,8 +28,7 @@ impl Object {
 
 		let mut lambert_sum = 0.0;
 
-		for i in 0..scene.lights.len() {
-			let light = scene.lights[i];
+		for light in &scene.lights {
 			let mut direction = match light {
 				Light::Directional(light) => {
 					let mut d = light.direction;
@@ -48,9 +47,7 @@ impl Object {
 			let ray = Ray::new(point, direction);
 			let mut intersects = false;
 
-			for j in 0..scene.objects.len() {
-				let object = scene.objects[j];
-
+			for object in &scene.objects {
 				if object.intersects(&ray).is_some() {
 					intersects = true;
 					break;
