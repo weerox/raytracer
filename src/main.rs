@@ -17,6 +17,8 @@ use object::Plane;
 use light::Light;
 use light::DirectionalLight;
 
+use std::time::Instant;
+
 fn main() {
 	let camera = Camera::new(
 		Point3::new(0.0, 0.0, 0.0),
@@ -52,6 +54,17 @@ fn main() {
 
 	scene.add_light(Light::Directional(light));
 
+	eprint!("Rendering... ");
+	let start = Instant::now();
+
 	let image = scene.render();
+
+	eprintln!("{:?}", start.elapsed());
+
+	eprint!("Saving... ");
+	let start = Instant::now();
+
 	image.save("render.png").unwrap();
+
+	eprintln!("{:?}", start.elapsed());
 }
