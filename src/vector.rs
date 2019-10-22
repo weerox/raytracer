@@ -20,6 +20,14 @@ impl Vector3 {
 		Point3::new(self.x, self.y, self.z)
 	}
 
+	pub fn equals(&self, v: Vector3) -> bool {
+		if self.x == v.x && self.y == v.y && self.z == v.z {
+			return true;
+		}
+
+		return false;
+	}
+
 	pub fn length(&self) -> f32 {
 		return (self.x * self.x + self.y * self.y + self.z * self.z).sqrt();
 	}
