@@ -37,12 +37,14 @@ impl Camera {
 		let mut sum = base_direction.clone();
 		sum.add(base_up);
 
-		let normal = base_direction.cross(direction);
+		if !base_direction.equals(direction) {
+			let normal = base_direction.cross(direction);
+			let angle =
+				(normal.length() / (base_direction.length() * direction.length()))
+				.asin();
 
-		let angle =
-			(normal.length() / (base_direction.length() * direction.length())).asin();
-
-		sum.rotate_around_axis(normal, angle);
+			sum.rotate_around_axis(normal, angle);
+		}
 
 		let mut up = sum.clone();
 		up.subtract(direction);
